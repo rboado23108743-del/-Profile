@@ -1,62 +1,594 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Personal Profile</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        img {
-            width: 150px;
-            border-radius: 50%;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Profile – Reymark Boado</title>
+
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- React + ReactDOM (production) -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Babel standalone (to transpile JSX in the browser) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    /* -------- CSS from App.css (exactly as provided) -------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-secondary: #475569;
+      --accent: #6c63ff;
+      --accent-light: #e0ddff;
+      --border: #e2e8f0;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      --radius: 20px;
+      --transition: 0.3s ease;
+      --tag-bg: #f1f5f9;
+      --avatar-gradient: linear-gradient(135deg, #6c63ff, #9b8cff);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border: #334155;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      --tag-bg: #334155;
+      --accent: #818cf8;
+      --accent-light: #1e1b4b;
+      --avatar-gradient: linear-gradient(135deg, #818cf8, #a78bfa);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 30px;
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: background var(--transition), color var(--transition), box-shadow var(--transition);
+    }
+    .theme-toggle:hover {
+      box-shadow: 0 8px 30px rgba(108, 99, 255, 0.25);
+    }
+
+    /* Hero */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+    .hero-avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--avatar-gradient);
+      color: #fff;
+      font-size: 60px;
+      font-weight: bold;
+      flex-shrink: 0;
+      box-shadow: 0 8px 30px rgba(108, 99, 255, 0.3);
+    }
+    .hero-content h1 {
+      font-size: 48px;
+    }
+    .hero-content h1 span {
+      color: var(--accent);
+    }
+    .tagline {
+      font-size: 20px;
+      color: var(--text-secondary);
+      margin: 10px 0;
+    }
+    .bio {
+      max-width: 500px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .hero-social {
+      display: flex;
+      gap: 15px;
+    }
+    .hero-social a {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card);
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: background var(--transition), color var(--transition), border-color var(--transition), transform 0.2s;
+    }
+    .hero-social a:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 30px;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background var(--transition), transform 0.2s, box-shadow var(--transition);
+    }
+    .btn-primary:hover {
+      background: #5a52d9;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(108, 99, 255, 0.35);
+    }
+
+    /* Sections */
+    section {
+      margin-top: 70px;
+    }
+    .section-title {
+      font-size: 30px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Cards */
+    .card,
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+    .card {
+      padding: 30px;
+    }
+
+    /* About */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    .skills-group {
+      margin-bottom: 25px;
+    }
+    .skills-group h4 {
+      margin-bottom: 10px;
+      color: var(--text-secondary);
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .skill-tag {
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      background: var(--tag-bg);
+      color: var(--text);
+      font-size: 14px;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+    }
+
+    /* Timeline */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .timeline-item {
+      border-left: 3px solid var(--accent);
+      padding-left: 20px;
+    }
+    .timeline-item .year {
+      color: var(--accent);
+      font-weight: bold;
+    }
+    .timeline-item .sub {
+      color: var(--text-secondary);
+    }
+
+    /* Projects Grid */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .project-card {
+      padding: 25px;
+      transition: transform 0.2s, box-shadow var(--transition);
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+    [data-theme="dark"] .project-card:hover {
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    }
+    .project-card .icon {
+      font-size: 35px;
+      color: var(--accent);
+      margin-bottom: 15px;
+    }
+    .project-card p {
+      margin: 12px 0 18px;
+      color: var(--text-secondary);
+    }
+    .project-card .tags span {
+      display: inline-block;
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--tag-bg);
+      color: var(--text);
+      font-size: 13px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+    }
+
+    /* Contact */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .contact-info-item {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text);
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 15px;
+      background: var(--card);
+      transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+    .contact-info-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 16px rgba(108, 99, 255, 0.1);
+    }
+    .contact-info-item i {
+      font-size: 22px;
+      color: var(--accent);
+      width: 40px;
+      text-align: center;
+    }
+    .contact-info-item .label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .contact-cta {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding: 20px;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+      transition: border-color var(--transition);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+      }
+      .hero-content h1 {
+        font-size: 34px;
+      }
+      .hero-social {
+        justify-content: center;
+      }
+      .section-title {
+        font-size: 24px;
+      }
+      .grid-3,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-avatar {
+        width: 110px;
+        height: 110px;
+        font-size: 44px;
+      }
+      .theme-toggle {
+        top: 12px;
+        right: 12px;
+        padding: 8px 14px;
+        font-size: 14px;
+      }
+    }
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 14px;
+      }
+      .card {
+        padding: 20px;
+      }
+      .project-card {
+        padding: 18px;
+      }
+      .hero-content h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <center>
-            <h1>Reymark Boado</h1>
-            <h3>BS Computer Science Student</h3>
-        </center>
 
-        <h2>About Me</h2>
-        <p>
-            I am a Computer Science student with a passion for technology and
-    problem-solving. I am particularly interested in web development,
-    software engineering, and emerging technologies that help improve
-    people's daily lives. I learning new programming concepts, and working on
-    projects that enhance my technical and analytical skills. Throughout my studies, I have
-    developed knowledge in programming, database management, and system
-    analysis. I am committed to continuous learning, adapting to new
-    technologies, and building innovative solutions that can make a
-    positive impact. My career goal is to become a successful software
-    developer and contribute to the growth of the technology industry.
-        </p>
+  <div id="root"></div>
 
-        <h2>Skills</h2>
-        <ul>
-            <li>HTML, CSS, JavaScript</li>
-            <li>Git & GitHub</li>
-        </ul>
+  <script type="text/babel">
+    // ----- React App (converted to plain JS with Babel) -----
+    const { useState } = React;
 
-        <h2>Projects</h2>
-        <ul>
-            <li>Finger print attendance</li>
-            <li>Personal Portfolio Website</li>
-            <li>School Analytics Information Management System</li>
-        </ul>
+    function App() {
+      const [darkMode, setDarkMode] = useState(false);
 
-        <h2>Contact</h2>
-        <p>Email: boadoreymark2@gamail.com</p>
-    </div>
+      const profile = {
+        name: "Reymark Boado",
+        initials: "RB",
+        title: "BS Computer Science",
+        bio: "A motivated 4th year BS Computer Science student passionate about software development and problem-solving.",
+        location: " La Union",
+
+        social: [
+          { icon: "fab fa-tiktok", url: "https://www.tiktok.com/@reymark.boado2" },
+          { icon: "fab fa-facebook", url: "https://www.facebook.com/reymark.boado.706063" },
+          { icon: "fab fa-instagram", url: "https://www.instagram.com/kirigaya_18" }
+        ],
+
+        about: [
+          "A passionate BS Computer Science student at Don Mariano Marcos Memorial State University (DMMMSU), currently in my 4th year. My journey in computer science is driven by a deep fascination with software development and creating solutions that make a difference."
+        ],
+
+        skills: {
+          Design: ["Figma", "Canva"],
+          "Front-End": ["HTML", "CSS", "JavaScript", "React"]
+        },
+
+        timeline: [
+          { year: "2023 – Present", title: "BS Computer Science", subtitle: "Don Mariano Marcos Memorial State University" },
+          { year: "2021 – 2023", title: "Senior High School - HUMMS", subtitle: "Don Eufemio F. Eriguel Memorial NHS" },
+          { year: "2017 – 2021", title: "Junior High School", subtitle: "Don Eufemio F. Eriguel Memorial NHS" }
+        ],
+
+        projects: [
+          {
+            icon: "fas fa-palette",
+            title: "School Analytics System",
+            description: "Easiest record system for teachers",
+            tags: ["React", "Node.js", "MongoDB"],
+            url: "#"
+          },
+          {
+            icon: "fas fa-mobile-alt",
+            title: "Attendance Tracking System with Finger Print",
+            description: "For better attendance checking",
+            tags: ["Arduino", "IoT", "C Language"],
+            url: "#"
+          },
+          {
+            icon: "fas fa-globe",
+            title: "Portfolio Website",
+            description: "A passion project showcasing personal content with a clean, modern design.",
+            tags: ["React", "Vercel", "Render"],
+            url: "https://thefolio-project-gcmc.vercel.app/"
+          }
+        ],
+
+        contact: {
+          email: "boadoreymark2@gmail.com",
+          phone: "09382711609"
+        }
+      };
+
+      return (
+        <div data-theme={darkMode ? "dark" : "light"}>
+          {/* Theme Toggle */}
+          <button className="theme-toggle" onClick={() => setDarkMode(!darkMode)}>
+            <i className={darkMode ? "fas fa-sun" : "fas fa-moon"}></i>
+            <span>{darkMode ? "Light" : "Dark"}</span>
+          </button>
+
+          <div className="container">
+            {/* Hero */}
+            <header className="hero">
+              <div className="hero-avatar">{profile.initials}</div>
+              <div className="hero-content">
+                <h1>Hi, I'm <span>{profile.name}</span></h1>
+                <p className="tagline">{profile.title}</p>
+                <p className="bio">{profile.bio}</p>
+                <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+                  <a href="#contact" className="btn-primary">Let's Talk</a>
+                  <div className="hero-social">
+                    {profile.social.map((item, index) => (
+                      <a key={index} href={item.url} target="_blank" rel="noopener noreferrer">
+                        <i className={item.icon}></i>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            {/* About */}
+            <section id="about">
+              <h2 className="section-title"><i className="fas fa-user"></i> About Me</h2>
+              <div className="about-grid">
+                <div className="card about-text">
+                  {profile.about.map((text, index) => (
+                    <p key={index}>{text}</p>
+                  ))}
+                  <p><i className="fas fa-map-pin"></i> Based in <strong>{profile.location}</strong></p>
+                </div>
+              </div>
+            </section>
+
+            {/* Skills */}
+            <section id="skills">
+              <h2 className="section-title"><i className="fas fa-cog"></i> Skills & Expertise</h2>
+              <div className="card">
+                {Object.entries(profile.skills).map(([category, skills]) => (
+                  <div className="skills-group" key={category}>
+                    <h4>{category}</h4>
+                    <div className="tags">
+                      {skills.map((skill) => (
+                        <span key={skill} className="skill-tag">{skill}</span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Education */}
+            <section id="education">
+              <h2 className="section-title"><i className="fas fa-graduation-cap"></i> Education</h2>
+              <div className="card">
+                <div className="timeline">
+                  {profile.timeline.map((item, index) => (
+                    <div className="timeline-item" key={index}>
+                      <span className="year">{item.year}</span>
+                      <div className="content">
+                        <h3>{item.title}</h3>
+                        <div className="sub">{item.subtitle}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Projects */}
+            <section id="projects">
+              <h2 className="section-title"><i className="fas fa-code"></i> Projects</h2>
+              <div className="grid-3">
+                {profile.projects.map((project, index) => (
+                  <a
+                    key={index}
+                    href={project.url}
+                    target={project.url !== "#" ? "_blank" : "_self"}
+                    rel="noopener noreferrer"
+                    className="project-card"
+                    style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+                  >
+                    <div className="icon"><i className={project.icon}></i></div>
+                    <h3>{project.title}</h3>
+                    <p>{project.description}</p>
+                    <div className="tags">
+                      {project.tags.map((tag) => (
+                        <span key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </section>
+
+            {/* Contact */}
+            <section id="contact">
+              <h2 className="section-title"><i className="fas fa-envelope"></i> Get in Touch</h2>
+              <div className="contact-grid">
+                <div className="card">
+                  <p className="contact-text">Feel free to reach out—I'd love to connect!</p>
+                  <a className="contact-info-item" href={`mailto:${profile.contact.email}`}>
+                    <i className="fas fa-envelope"></i>
+                    <div className="info">
+                      <span className="label">Email</span>
+                      <span>{profile.contact.email}</span>
+                    </div>
+                  </a>
+                </div>
+                <div className="card contact-cta">
+                  <i className="fas fa-paper-plane" style={{ fontSize: "2.5rem" }}></i>
+                  <h3>Let's work together</h3>
+                  <p>I'm open to collaborations and opportunities.</p>
+                  <a className="btn-primary" href={`mailto:${profile.contact.email}`}>Send a Message</a>
+                </div>
+              </div>
+            </section>
+
+            {/* Footer */}
+            <footer className="footer">
+              © 2026 {profile.name} · Built with ❤️ · All rights reserved.
+            </footer>
+          </div>
+        </div>
+      );
+    }
+
+    // Mount the app
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
 </body>
-</html>
+    </html>
